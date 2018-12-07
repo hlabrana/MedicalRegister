@@ -19,9 +19,9 @@ public class Paciente {
     public List<String> Medicamentos;
     
     public Paciente (){
-        this.Procedimientos= new ArrayList();
-        this.Examenes= new ArrayList();
-        this.Medicamentos= new ArrayList();
+        this.Procedimientos= new ArrayList<>();
+        this.Examenes= new ArrayList<>();
+        this.Medicamentos= new ArrayList<>();
     }
     
     public List<String> getProcedimientos(){

@@ -18,7 +18,7 @@ public class Requerimiento {
     public List<PacienteReq> ListaPacientes;
     
     public Requerimiento(){
-        this.ListaPacientes = new ArrayList();
+        this.ListaPacientes = new ArrayList<>();
     }
 
     public static class PacienteReq {

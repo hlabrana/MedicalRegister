@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -23,9 +24,9 @@ public class Trabajadores {
     public List<Paramedico> Paramedicos;
     
     public Trabajadores(){
-        this.Doctores= new ArrayList();
-        this.Enfermeros= new ArrayList();
-        this.Paramedicos= new ArrayList();
+        this.Doctores= new ArrayList<>();
+        this.Enfermeros= new ArrayList<>();
+        this.Paramedicos= new ArrayList<>();
     }
     
     public Trabajadores ProcesarJSON(String nameFile) throws IOException{

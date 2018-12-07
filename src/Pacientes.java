@@ -22,7 +22,7 @@ public class Pacientes {
     public List<Paciente> Pacientes;
     
     public Pacientes(){
-        this.Pacientes = new ArrayList();
+        this.Pacientes = new ArrayList<>();
     }
     
     public Pacientes ProcesarJSON(String nameFile) throws IOException{
