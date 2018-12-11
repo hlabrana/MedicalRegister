@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 public class Cliente {
     
     public List<Socket> CrearSocket(String ipmaquina, IP listaip){
-        //Nomenclatura SCXX: Socket para envío de datos a cliente XX
+        //Nomenclatura SCXX: Socket para envio de datos a cliente XX
         if (ipmaquina.equals(listaip.M29.get(0))){
             try {
                 Socket SC30 = new Socket(listaip.M30.get(0),Integer.parseInt(listaip.M30.get(1)));
