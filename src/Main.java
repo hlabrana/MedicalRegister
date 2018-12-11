@@ -41,11 +41,12 @@ public class Main {
         //Consulta por IP de maquina
         String ipMaquina = ConsultarIPMaquina();
         
+        //Crear Socket Servidor
+        Servidor servidor = new Servidor(ipMaquina,listaip);
+        
         //Crear Socket Cliente
         Cliente cliente = new Cliente();
         List<Socket> listasockets = cliente.CrearSocket(ipMaquina, listaip);
-        //Crear Socket Servidor
-        Servidor servidor = new Servidor(ipMaquina,listaip);
         
     }
     

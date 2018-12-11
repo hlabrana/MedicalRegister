@@ -9,6 +9,9 @@ classes:
 	javac $(GSON) -sourcepath src src/Requerimiento.java
 	javac $(GSON) -sourcepath src src/Pacientes.java
 	javac $(GSON) -sourcepath src src/Requerimientos.java
+	javac $(GSON) -sourcepath src src/IP.java
+	javac $(GSON) -sourcepath src src/Servidor.java
+	javac $(GSON) -sourcepath src src/Cliente.java
 	javac $(GSON) -sourcepath src src/Main.java
 
 run:
