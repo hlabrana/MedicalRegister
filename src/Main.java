@@ -1,5 +1,8 @@
 
 import java.io.IOException;
+import java.net.Socket;
+import java.util.List;
+import java.util.Scanner;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -30,6 +33,31 @@ public class Main {
         ////PROCESA JSON Pacientes Y LOS AGREGA A UNA LISTA pacientes
         Pacientes pacientes = new Pacientes();
         pacientes = pacientes.ProcesarJSON("JSON/Pacientes.JSON");
+        
+        //PROCESA JSON IP e instancia una clase IP
+        IP listaip = new IP();
+        listaip = listaip.ProcesarJSON("JSON/IP.JSON");
+        
+        //Consulta por IP de maquina
+        String ipMaquina = ConsultarIPMaquina();
+        
+        //Crear Socket Cliente
+        Cliente cliente = new Cliente();
+        List<Socket> listasockets = cliente.CrearSocket(ipMaquina, listaip);
+        //Crear Socket Servidor
+        Servidor servidor = new Servidor(ipMaquina,listaip);
+        
+    }
+    
+    /**
+     *
+     * @return
+     */
+    public static String ConsultarIPMaquina(){
+        System.out.print("\nIngrese IP de la Maquina: ");
+        Scanner in = new Scanner(System.in);
+        String ip = in.nextLine();
+        return ip;
     }
     
 }

@@ -44,4 +44,14 @@ public class Trabajadores {
         }
     }
     
+    public Doctor getMejorDoctor(){
+        Doctor candidato = this.Doctores.get(0);
+        for (int i=1;i<this.Doctores.size();i++){
+            if ((candidato.Estudios+candidato.Experiencia)<(this.Doctores.get(i).Estudios+this.Doctores.get(i).Experiencia)){
+                candidato = this.Doctores.get(i);
+            }
+        }
+        return candidato;
+    }
+    
 }
