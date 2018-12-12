@@ -14,34 +14,11 @@ import java.util.List;
  */
 public class Paciente {
     public DatosPersonales Datos_Personales;
-    public List<String> Procedimientos;
-    public List<String> Examenes;
-    public List<String> Medicamentos;
+    public Procedimiento Procedimientos;
+    public Examen Examenes;
+    public Medicamento Medicamentos;
     
     public Paciente (){
-        this.Procedimientos= new ArrayList<>();
-        this.Examenes= new ArrayList<>();
-        this.Medicamentos= new ArrayList<>();
-    }
-    
-    public List<String> getProcedimientos(){
-        return this.Procedimientos;
-    }
-    public List<String> getExamenes(){
-        return this.Examenes;
-    }
-    public List<String> getMedicamentos(){
-        return this.Medicamentos;
-    }
-    
-    public void SetProcedimientos (String procedure){
-        this.Procedimientos.add(procedure);
-    }
-    public void SetExamenes (String procedure){
-        this.Examenes.add(procedure);
-    }
-    public void SetMedicamentos (String procedure){
-        this.Medicamentos.add(procedure);
     }
 
     public static class DatosPersonales {
@@ -70,5 +47,35 @@ public class Paciente {
             return this.Enfermedades;
         }
       
+    }
+
+    public static class Procedimiento {
+        List<String> Asignados;
+        List<String> Completados;
+
+        public Procedimiento() {
+            this.Asignados = new ArrayList<>();
+            this.Completados = new ArrayList<>();
+        }
+    }
+
+    public static class Examen {
+        List<String> Realizados;
+        List<String> No_Realizados;
+        
+        public Examen() {
+            this.Realizados = new ArrayList<>();
+            this.No_Realizados = new ArrayList<>();
+        }
+    }
+
+    public static class Medicamento {
+        List<String> Recetados;
+        List<String> Suministrados;
+        
+        public Medicamento() {
+            this.Recetados = new ArrayList<>();
+            this.Suministrados = new ArrayList<>();
+        }
     }
 }
