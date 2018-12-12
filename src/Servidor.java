@@ -21,18 +21,27 @@ public class Servidor extends Thread {
         if (listaip.M29.get(0).equals(ipmaquina)){
             this.Ipmaquina = ipmaquina;
             this.puerto = Integer.parseInt(listaip.M29.get(1));
+            Thread hebra = new Thread(this);
+            hebra.start();
         }
         if (listaip.M30.get(0).equals(ipmaquina)){
             this.Ipmaquina = ipmaquina;
             this.puerto = Integer.parseInt(listaip.M30.get(1));
+            Thread hebra = new Thread(this);
+            hebra.start();
         }
         if (listaip.M31.get(0).equals(ipmaquina)){
             this.Ipmaquina = ipmaquina;
             this.puerto = Integer.parseInt(listaip.M31.get(1));
+            Thread hebra = new Thread(this);
+            hebra.start();
+            
         }
         if (listaip.M32.get(0).equals(ipmaquina)){
             this.Ipmaquina = ipmaquina;
             this.puerto = Integer.parseInt(listaip.M32.get(1));
+            Thread hebra = new Thread(this);
+            hebra.start();
         }
     }
     
