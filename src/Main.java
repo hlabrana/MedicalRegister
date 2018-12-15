@@ -51,6 +51,11 @@ public class Main {
         //Crear Socket Cliente
         Cliente cliente = new Cliente();
         List<Socket> listasockets = cliente.CrearSocket(ipMaquina, listaip);
+
+        //El primer coordinador es la maquina con ip 10.4.60.169
+        //las demas maquinas envian su mejor candidato para algortimo de bully
+        Doctor candidato = personal.getMejorDoctor();
+        EnviarCandidato(candidato,listasockets,ipMaquina,cliente);
         
     }
     
@@ -63,6 +68,17 @@ public class Main {
         Scanner in = new Scanner(System.in);
         String ip = in.nextLine();
         return ip;
+    }
+    
+    public static void EnviarCandidato(Doctor candidato,List<Socket> listasockets,String ipmaquina,Cliente cliente) throws IOException{
+        if(ipmaquina.equals("10.6.40.169") == false){
+            String experiencia = String.valueOf(candidato.getEstudios()+candidato.getExperiencia());
+            for(int i=0;i<listasockets.size();i++){
+                if (listasockets.get(i).getInetAddress().getCanonicalHostName().equals("10.6.40.169")){
+                    cliente.EnviarIndividual("[Bully]"+experiencia,listasockets.get(i));
+                }
+            }
+        }
     }
     
 }

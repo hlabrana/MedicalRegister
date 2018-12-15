@@ -53,6 +53,7 @@ public class Servidor extends Thread {
                 Socket socket = servidor.accept();
                 DataInputStream mensaje = new DataInputStream(socket.getInputStream());
                 String data = mensaje.readUTF();
+                System.out.println("\n"+data+"\n");
                 socket.close();
             }
         } catch (IOException ex) {
