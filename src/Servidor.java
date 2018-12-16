@@ -17,26 +17,26 @@ public class Servidor extends Thread {
     int puerto;
     Main main;
     
-    public Servidor(Main main){
-        if (main.listaip.M29.get(0).equals(main.ipMaquina)){
-            this.puerto = Integer.parseInt(main.listaip.M29.get(1));
+    public Servidor(String ipMaquina,IP listaip){
+        if (listaip.M29.get(0).equals(ipMaquina)){
+            this.puerto = Integer.parseInt(listaip.M29.get(1));
             Thread hebra = new Thread();
             hebra.start();
 
         }
-        if (main.listaip.M30.get(0).equals(main.ipMaquina)){
-            this.puerto = Integer.parseInt(main.listaip.M30.get(1));
+        if (listaip.M30.get(0).equals(ipMaquina)){
+            this.puerto = Integer.parseInt(listaip.M30.get(1));
             Thread hebra = new Thread();
             hebra.start();
         }
-        if (main.listaip.M31.get(0).equals(main.ipMaquina)){
-            this.puerto = Integer.parseInt(main.listaip.M31.get(1));
+        if (listaip.M31.get(0).equals(ipMaquina)){
+            this.puerto = Integer.parseInt(listaip.M31.get(1));
             Thread hebra = new Thread();
             hebra.start();
             
         }
-        if (main.listaip.M32.get(0).equals(main.ipMaquina)){
-            this.puerto = Integer.parseInt(main.listaip.M32.get(1));
+        if (listaip.M32.get(0).equals(ipMaquina)){
+            this.puerto = Integer.parseInt(listaip.M32.get(1));
             Thread hebra = new Thread();
             hebra.start();
         }
