@@ -1,12 +1,8 @@
 
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -37,26 +33,29 @@ public class Main extends Thread {
         Trabajadores personal = new Trabajadores();
         personal = personal.ProcesarJSON("JSON/Trabajadores.JSON");
         main.personal = personal;
+        
         ////PROCESA JSON REQUERIMIENTOS Y LOS AGREGA A UNA LISTA requerimientos
         Requerimientos requerimientos = new Requerimientos();
         requerimientos = requerimientos.ProcesarJSON("JSON/Requerimientos.JSON");
         main.requerimientos = requerimientos;
+        
         ////PROCESA JSON Pacientes Y LOS AGREGA A UNA LISTA pacientes
         Pacientes pacientes = new Pacientes();
         pacientes = pacientes.ProcesarJSON("JSON/Pacientes.JSON");
         main.pacientes = pacientes;
+        
         //PROCESA JSON IP e instancia una clase IP
         IP listaip = new IP();
         listaip = listaip.ProcesarJSON("JSON/IP.JSON");
         main.listaip = listaip;
+        
         //Consulta por IP de maquina
         String ipMaquina = ConsultarIPMaquina();
         main.ipMaquina = ipMaquina;
+        
         //Crear Socket Servidor
-        Servidor servidor = new Servidor(ipMaquina,listaip);
+        Servidor servidor = new Servidor(main);
         main.servidor = servidor;
-        Thread hebra = new Thread();
-        hebra.start();
         
         System.out.print("\nIniciar: ");
         Scanner in = new Scanner(System.in);
@@ -94,21 +93,6 @@ public class Main extends Thread {
                     cliente.EnviarIndividual("[Bully];"+experiencia,listasockets.get(i));
                 }
             }
-        }
-    }
-    
-    public void run(){
-        try {
-            ServerSocket servidor = new ServerSocket(this.servidor.puerto);
-            while(true){
-                Socket socket = servidor.accept();
-                DataInputStream mensaje = new DataInputStream(socket.getInputStream());
-                String data = mensaje.readUTF();
-                System.out.println("\n"+data+"\n");
-                socket.close();
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
