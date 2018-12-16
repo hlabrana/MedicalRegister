@@ -1,8 +1,12 @@
 
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -14,7 +18,13 @@ import java.util.Scanner;
  *
  * @author hlabrana
  */
-public class Main {
+public class Main implements Runnable {
+    Trabajadores personal;
+    Requerimientos requerimientos;
+    Pacientes pacientes;
+    IP listaip;
+    String ipMaquina;
+    Servidor servidor;
     /**
      * @param args the command line arguments
      * @throws java.io.IOException
@@ -42,7 +52,16 @@ public class Main {
         
         //Crear Socket Servidor
         Servidor servidor = new Servidor(ipMaquina,listaip);
-        servidor.IniciarServidor(servidor);
+        // Crear HEBRA
+        Main main = new Main();
+        main.ipMaquina = ipMaquina;
+        main.listaip = listaip;
+        main.pacientes = pacientes;
+        main.personal = personal;
+        main.requerimientos = requerimientos;
+        main.servidor = servidor;
+        Runnable subproceso = main;
+        new Thread(subproceso).start();
         
         System.out.print("\nIniciar: ");
         Scanner in = new Scanner(System.in);
@@ -54,10 +73,10 @@ public class Main {
 
         //El primer coordinador es la maquina con ip 10.4.60.169
         //las demas maquinas envian su mejor candidato para algortimo de bully
-        /*System.out.println("\nAplicando Algortimo Bully...");
+        System.out.println("\nAplicando Algortimo Bully...");
         Doctor candidato = personal.getMejorDoctor();
         EnviarCandidato(candidato,listasockets,ipMaquina,cliente);
-        //String ipCoordinador = EscogerCoordinador();*/
+        //String ipCoordinador = EscogerCoordinador();
     }
     
     /**
@@ -83,4 +102,20 @@ public class Main {
         }
     }
     
+    @Override
+    public void run(){
+        try {
+            System.out.println("VALOR;"+this.servidor.puerto);
+            ServerSocket servidor = new ServerSocket(this.servidor.puerto);
+            while(true){
+                Socket socket = servidor.accept();
+                DataInputStream mensaje = new DataInputStream(socket.getInputStream());
+                String data = mensaje.readUTF();
+                System.out.println("\n"+data+"\n");
+                socket.close();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
