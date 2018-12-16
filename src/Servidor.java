@@ -45,6 +45,7 @@ public class Servidor extends Thread {
     @Override
     public void run(){
         try {
+            System.out.println(this.puerto);
             ServerSocket servidor = new ServerSocket(this.puerto);
             while(true){
                 Socket socket = servidor.accept();
