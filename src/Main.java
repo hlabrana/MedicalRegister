@@ -20,7 +20,6 @@ public class Main extends Thread {
     Pacientes pacientes;
     IP listaip;
     String ipMaquina;
-    Servidor servidor;
     /**
      * @param args the command line arguments
      * @throws java.io.IOException
@@ -55,7 +54,6 @@ public class Main extends Thread {
         
         //Crear Socket Servidor
         Servidor servidor = new Servidor(main);
-        main.servidor = servidor;
         
         System.out.print("\nIniciar: ");
         Scanner in = new Scanner(System.in);
