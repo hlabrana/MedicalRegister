@@ -42,6 +42,7 @@ public class Main {
         
         //Crear Socket Servidor
         Servidor servidor = new Servidor(ipMaquina,listaip);
+        servidor.IniciarServidor(servidor);
         
         System.out.print("\nIniciar: ");
         Scanner in = new Scanner(System.in);

@@ -15,31 +15,31 @@ import java.util.logging.Logger;
  */
 public class Servidor extends Thread {
     int puerto;
-    Main main;
+    String ipMaquina;
     
     public Servidor(String ipMaquina,IP listaip){
         if (listaip.M29.get(0).equals(ipMaquina)){
+            this.ipMaquina = ipMaquina;
             this.puerto = Integer.parseInt(listaip.M29.get(1));
-            Thread hebra = new Thread();
-            hebra.start();
-
         }
         if (listaip.M30.get(0).equals(ipMaquina)){
+            this.ipMaquina = ipMaquina;
             this.puerto = Integer.parseInt(listaip.M30.get(1));
-            Thread hebra = new Thread();
-            hebra.start();
         }
         if (listaip.M31.get(0).equals(ipMaquina)){
+            this.ipMaquina = ipMaquina;
             this.puerto = Integer.parseInt(listaip.M31.get(1));
-            Thread hebra = new Thread();
-            hebra.start();
             
         }
         if (listaip.M32.get(0).equals(ipMaquina)){
+            this.ipMaquina = ipMaquina;
             this.puerto = Integer.parseInt(listaip.M32.get(1));
-            Thread hebra = new Thread();
-            hebra.start();
         }
+    }
+    
+    public void IniciarServidor(Servidor servidor){
+        Thread hebra = new Thread();
+        hebra.start();
     }
     
     @Override
