@@ -1,8 +1,12 @@
 
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -14,35 +18,45 @@ import java.util.Scanner;
  *
  * @author hlabrana
  */
-public class Main {
-
+public class Main extends Thread {
+    Trabajadores personal;
+    Requerimientos requerimientos;
+    Pacientes pacientes;
+    IP listaip;
+    String ipMaquina;
+    Servidor servidor;
     /**
      * @param args the command line arguments
      * @throws java.io.IOException
      */
     public static void main(String[] args) throws IOException{
         
+        Main main = new Main();
+        
         //PROCESA JSON TRABAJADORES Y LOS AGREGA A UNA LISTA personal
         Trabajadores personal = new Trabajadores();
         personal = personal.ProcesarJSON("JSON/Trabajadores.JSON");
-        
+        main.personal = personal;
         ////PROCESA JSON REQUERIMIENTOS Y LOS AGREGA A UNA LISTA requerimientos
         Requerimientos requerimientos = new Requerimientos();
         requerimientos = requerimientos.ProcesarJSON("JSON/Requerimientos.JSON");
-        
+        main.requerimientos = requerimientos;
         ////PROCESA JSON Pacientes Y LOS AGREGA A UNA LISTA pacientes
         Pacientes pacientes = new Pacientes();
         pacientes = pacientes.ProcesarJSON("JSON/Pacientes.JSON");
-        
+        main.pacientes = pacientes;
         //PROCESA JSON IP e instancia una clase IP
         IP listaip = new IP();
         listaip = listaip.ProcesarJSON("JSON/IP.JSON");
-        
+        main.listaip = listaip;
         //Consulta por IP de maquina
         String ipMaquina = ConsultarIPMaquina();
-        
+        main.ipMaquina = ipMaquina;
         //Crear Socket Servidor
         Servidor servidor = new Servidor(ipMaquina,listaip);
+        main.servidor = servidor;
+        Thread hebra = new Thread();
+        hebra.start();
         
         System.out.print("\nIniciar: ");
         Scanner in = new Scanner(System.in);
@@ -54,9 +68,10 @@ public class Main {
 
         //El primer coordinador es la maquina con ip 10.4.60.169
         //las demas maquinas envian su mejor candidato para algortimo de bully
+        System.out.println("\nAplicando Algortimo Bully...");
         Doctor candidato = personal.getMejorDoctor();
         EnviarCandidato(candidato,listasockets,ipMaquina,cliente);
-        
+        //String ipCoordinador = EscogerCoordinador();
     }
     
     /**
@@ -73,11 +88,27 @@ public class Main {
     public static void EnviarCandidato(Doctor candidato,List<Socket> listasockets,String ipmaquina,Cliente cliente) throws IOException{
         if(ipmaquina.equals("10.6.40.169") == false){
             String experiencia = String.valueOf(candidato.getEstudios()+candidato.getExperiencia());
+            System.out.println("[Algortimo Bully] Enviando Candidato a Coordinador...");
             for(int i=0;i<listasockets.size();i++){
                 if (listasockets.get(i).getInetAddress().getCanonicalHostName().equals("10.6.40.169")){
-                    cliente.EnviarIndividual("[Bully]"+experiencia,listasockets.get(i));
+                    cliente.EnviarIndividual("[Bully];"+experiencia,listasockets.get(i));
                 }
             }
+        }
+    }
+    
+    public void run(){
+        try {
+            ServerSocket servidor = new ServerSocket(this.servidor.puerto);
+            while(true){
+                Socket socket = servidor.accept();
+                DataInputStream mensaje = new DataInputStream(socket.getInputStream());
+                String data = mensaje.readUTF();
+                System.out.println("\n"+data+"\n");
+                socket.close();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
