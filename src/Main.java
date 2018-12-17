@@ -111,9 +111,12 @@ public class Main implements Runnable {
         //PROCESAMIENTO ARCHIVOS
         
         //CREAR ARCHIVO LOG
-        FileWriter archivolog = new FileWriter("JSON/Operaciones.log",false);
-        main.escribir = archivolog;
+        try{
+        FileWriter archivolog = new FileWriter("JSON/Operaciones.log",true);
         archivolog.write("Operaciones Relativas a Maquina IP: "+main.ipMaquina+"\n\n");
+        archivolog.close();
+        }
+        catch (IOException e){}
 
         //SI ES EL COORDINADOR ACTUAL
         if(main.Is_Coordinador){
@@ -215,7 +218,9 @@ public class Main implements Runnable {
         Date date = new Date();
         DateFormat hourformat = new SimpleDateFormat("EEEEE dd MMMMM yyyy HH:mm:ss");
         String fecha = hourformat.format(date);
-        main.escribir.write("["+fecha+"] "+operacion+"\n");
+        try (FileWriter escribir = new FileWriter("JSON/Operaciones.log",true)) {
+            escribir.write("["+fecha+"] "+operacion+"\n");
+        }
     }
     
     public static void EnviarPermiso(String mensaje,List<Socket> listasockets,int turno,Cliente cliente) throws IOException{
