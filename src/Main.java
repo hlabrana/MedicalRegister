@@ -112,7 +112,7 @@ public class Main implements Runnable {
         
         //CREAR ARCHIVO LOG
         try{
-        FileWriter archivolog = new FileWriter("JSON/Operaciones.log",true);
+        FileWriter archivolog = new FileWriter("Operaciones.log",true);
         archivolog.write("Operaciones Relativas a Maquina IP: "+main.ipMaquina+"\n\n");
         archivolog.close();
         }
@@ -218,7 +218,7 @@ public class Main implements Runnable {
         Date date = new Date();
         DateFormat hourformat = new SimpleDateFormat("EEEEE dd MMMMM yyyy HH:mm:ss");
         String fecha = hourformat.format(date);
-        try (FileWriter escribir = new FileWriter("JSON/Operaciones.log",true)) {
+        try (FileWriter escribir = new FileWriter("Operaciones.log",true)) {
             escribir.write("["+fecha+"] "+operacion+"\n");
         }
     }
@@ -363,7 +363,7 @@ public class Main implements Runnable {
                 DataInputStream mensaje = new DataInputStream(socket.getInputStream());
                 String data = mensaje.readUTF();
                 ProcesarMensaje(this,data,this.candidatos);
-                //System.out.println("\n"+data+"\n");
+                System.out.println("\n"+data+"\n");
                 socket.close();
             }
         } catch (IOException ex) {
