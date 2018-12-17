@@ -84,24 +84,37 @@ public class Cliente {
     }
     
     public void EnviarBroadcast(String data,List<Socket> listaSocket) throws IOException{
+        String ip1 = listaSocket.get(0).getInetAddress().getCanonicalHostName();
+        int port1 = listaSocket.get(0).getPort();
+        String ip2 = listaSocket.get(1).getInetAddress().getCanonicalHostName();
+        int port2 = listaSocket.get(1).getPort();
+        String ip3 = listaSocket.get(2).getInetAddress().getCanonicalHostName();
+        int port3 = listaSocket.get(2).getPort();
+        
+        Socket uno = new Socket(ip1,port1);
+        Socket dos = new Socket(ip2,port2);
+        Socket tres = new Socket(ip3,port3);
         //SERIALIZAR DATA EN SOCKET
-        DataOutputStream mensaje1 = new DataOutputStream(listaSocket.get(0).getOutputStream());
-        DataOutputStream mensaje2 = new DataOutputStream(listaSocket.get(1).getOutputStream());
-        DataOutputStream mensaje3 = new DataOutputStream(listaSocket.get(2).getOutputStream());
+        DataOutputStream mensaje1 = new DataOutputStream(uno.getOutputStream());
+        DataOutputStream mensaje2 = new DataOutputStream(dos.getOutputStream());
+        DataOutputStream mensaje3 = new DataOutputStream(tres.getOutputStream());
         //ENVIAR DATA
         mensaje1.writeUTF(data);
         mensaje2.writeUTF(data);
         mensaje3.writeUTF(data);
         //Cerrar Buffer
-        //mensaje1.close();
-        //mensaje2.close();
-        //mensaje3.close();
+        mensaje1.close();
+        mensaje2.close();
+        mensaje3.close();
     }
     
     public void EnviarIndividual(String data,Socket socket) throws IOException{
-        DataOutputStream mensaje = new DataOutputStream(socket.getOutputStream());
+        String ip1 = socket.getInetAddress().getCanonicalHostName();
+        int port1 = socket.getPort();
+        Socket uno = new Socket(ip1,port1);
+        DataOutputStream mensaje = new DataOutputStream(uno.getOutputStream());
         mensaje.writeUTF(data);
-        //mensaje.close();
+        mensaje.close();
     }
     
     
