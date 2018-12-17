@@ -1,9 +1,13 @@
 
 import java.io.DataInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -28,6 +32,10 @@ public class Main implements Runnable {
     Servidor servidor;
     List<String> candidatos = new ArrayList<>();
     boolean Is_Coordinador;
+    String ipCoordinador;
+    boolean permiso;
+    FileWriter escribir;
+    List<Socket> listaSocket;
     /**
      * @param args the command line arguments
      * @throws java.io.IOException
@@ -73,6 +81,7 @@ public class Main implements Runnable {
         //Crear Socket Cliente
         Cliente cliente = new Cliente();
         List<Socket> listasockets = cliente.CrearSocket(ipMaquina, listaip);
+        main.listaSocket = listasockets;
 
         //El primer coordinador es la maquina con ip 10.4.60.169
         //las demas maquinas envian su mejor candidato para algortimo de bully
@@ -88,7 +97,60 @@ public class Main implements Runnable {
             System.out.println("[Algoritmo Bully] Nuevo Coordinador con IP: "+mensaje.split(";")[0]);
             System.out.println("[Algoritmo Bully] Avisando resultado..");
             cliente.EnviarBroadcast(mensaje, listasockets);
+            if(mensaje.split(";")[0].equals(main.ipMaquina)){
+                main.Is_Coordinador = true;
+                main.ipCoordinador = mensaje.split(";")[0];
+                System.out.println("[Algoritmo Bully] Esta maquina es el nuevo Coordinador");
+            }
+            else{
+                main.Is_Coordinador = false;
+                main.ipCoordinador = mensaje.split(";")[0];
+            }
         }
+        
+        //PROCESAMIENTO ARCHIVOS
+        
+        //CREAR ARCHIVO LOG
+        FileWriter archivolog = new FileWriter("JSON/Operaciones.log",false);
+        main.escribir = archivolog;
+        archivolog.write("Operaciones Relativas a Maquina IP: "+main.ipMaquina+"\n\n");
+
+        //SI ES EL COORDINADOR ACTUAL
+        if(main.Is_Coordinador){
+            int turno = 0;
+            while(true){
+                if(turno == 0){ //Turno Coordinador
+                    String operacion = ProcesarRequerimiento(main);
+                    cliente.EnviarBroadcast(ipMaquina+";LOG;"+operacion,listasockets);
+                    EscribirLog(main,operacion);
+                    turno++;
+                }
+                else{ //Turno maquinas No coordinadoras
+                    EnviarPermiso(ipMaquina+";PERMISO; ",listasockets,turno-1,cliente);
+                    Thread.sleep(6000); //Espera por log de maquina cliente
+                    if(turno == 3){ //RESET DE CONTADOR DE TURNOS
+                        turno = 0;
+                    }
+                    else{
+                        turno++;
+                    }
+                }
+            }
+        }
+        
+        
+        //SI NO ES EL COORDINADOR
+        if(main.Is_Coordinador == false){
+            while(true){
+                while(main.permiso == false){ //Cuando llegue el permiso puede ejecutarse
+                    Thread.sleep(500); //Espera por turno medio segundo
+                }
+                String operacion = ProcesarRequerimiento(main);
+                EnviarACoordinador(main,operacion,listasockets,cliente);
+                main.permiso = false;
+            }
+        }
+        
         
     }
     
@@ -96,6 +158,70 @@ public class Main implements Runnable {
      *
      * @return
      */
+    
+    public static void ProcesarLog(Main main,String mensaje) throws IOException{
+        String cargo = mensaje.split(";")[2];
+        String nombre = mensaje.split(";")[3];
+        String ficha = mensaje.split(";")[4];
+        String texto = mensaje.split(";")[5];
+        
+        for (int j=0;j<main.pacientes.Pacientes.size();j++){
+
+                if(cargo.equals("Doctor")){
+                    if(main.pacientes.Pacientes.get(j).Datos_Personales.Nombre.equals(nombre)){
+                        if(ficha.equals("Procedimientos")){
+                            main.pacientes.Pacientes.get(j).Procedimientos.Asignados.add(texto);
+                        }
+                        if(ficha.equals("Medicamentos")){
+                            main.pacientes.Pacientes.get(j).Medicamentos.Recetados.add(texto);
+                        }
+                        if(ficha.equals("Examenes")){
+                            main.pacientes.Pacientes.get(j).Examenes.No_Realizados.add(texto);
+                        }
+                    }
+                }
+
+                if(cargo.equals("Enfermero")){
+                    if(main.pacientes.Pacientes.get(j).Datos_Personales.Nombre.equals(nombre)){
+                        if(ficha.equals("Procedimientos")){
+                            main.pacientes.Pacientes.get(j).Procedimientos.Completados.add(texto);
+                        }
+                        if(ficha.equals("Medicamentos")){
+                            main.pacientes.Pacientes.get(j).Medicamentos.Suministrados.add(texto);
+                        }
+                    }
+                }
+
+                if(cargo.equals("Paramedico")){
+                    if(main.pacientes.Pacientes.get(j).Datos_Personales.Nombre.equals(nombre)){
+                        if(ficha.equals("Examenes")){
+                            main.pacientes.Pacientes.get(j).Examenes.Realizados.add(texto);
+                        }
+                    }
+                }
+        }
+        EscribirLog(main,cargo+";"+nombre+";"+ficha+";"+texto);
+    }
+    
+    public static void EnviarACoordinador(Main main,String operacion,List<Socket> listasockets,Cliente cliente) throws IOException{
+        for(int i=0;i<listasockets.size();i++){
+            if(main.ipCoordinador.equals(listasockets.get(i).getInetAddress().getCanonicalHostName())){
+                cliente.EnviarIndividual(main.ipMaquina+";R_LOG;"+operacion,listasockets.get(i));
+            }
+        }
+    }
+    
+    public static void EscribirLog(Main main,String operacion) throws IOException{
+        Date date = new Date();
+        DateFormat hourformat = new SimpleDateFormat("EEEEE dd MMMMM yyyy HH:mm:ss");
+        String fecha = hourformat.format(date);
+        main.escribir.write("["+fecha+"] "+operacion+"\n");
+    }
+    
+    public static void EnviarPermiso(String mensaje,List<Socket> listasockets,int turno,Cliente cliente) throws IOException{
+        cliente.EnviarIndividual(mensaje,listasockets.get(turno));
+    }
+    
     public static String ConsultarIPMaquina(){
         System.out.print("\nIngrese IP de la Maquina: ");
         Scanner in = new Scanner(System.in);
@@ -115,7 +241,7 @@ public class Main implements Runnable {
         }
     }
     
-    public static void ProcesarMensaje(Main main,String mensaje,List<String> candidatos){
+    public static void ProcesarMensaje(Main main,String mensaje,List<String> candidatos) throws IOException{
         if(mensaje.split(";")[1].equals("Bully")){
             candidatos.add(mensaje);
             String escogido = EscogerCoordinador(main);
@@ -124,11 +250,25 @@ public class Main implements Runnable {
             System.out.println("[Algoritmo Bully] Resultado: Nuevo Coordinador con IP: "+mensaje.split(";")[0]);
             if(mensaje.split(";")[0].equals(main.ipMaquina)){
                 main.Is_Coordinador = true;
+                main.ipCoordinador = mensaje.split(";")[0];
                 System.out.println("[Algoritmo Bully] Esta maquina es el nuevo Coordinador");
             }
             else{
                 main.Is_Coordinador = false;
+                main.ipCoordinador = mensaje.split(";")[0];
             }
+        }
+        if(mensaje.split(";")[1].equals("LOG")){
+            ProcesarLog(main,mensaje);
+        }
+        if(mensaje.split(";")[1].equals("PERMISO")){
+            main.permiso = true;
+        }
+        if(mensaje.split(";")[1].equals("R_LOG")){
+            Cliente cliente = new Cliente();
+            String operacion = ProcesarRequerimiento(main);
+            cliente.EnviarBroadcast(main.ipMaquina+";LOG;"+operacion,main.listaSocket);
+            EscribirLog(main,operacion);
         }
     }
     
@@ -145,6 +285,67 @@ public class Main implements Runnable {
         return ipCoordinador+";R_Bully;"+String.valueOf(expCoordinador);
         }
         return null;
+    }
+    
+    public static String ProcesarRequerimiento(Main main){
+        Requerimiento requerimiento = null;
+        Requerimiento.PacienteReq operacion = null;
+        for(int i=0;i<main.requerimientos.Requerimientos.size();i++){
+            if(main.requerimientos.Requerimientos.get(i).ListaPacientes.size() != 0){
+                requerimiento = main.requerimientos.Requerimientos.get(i);
+                operacion = main.requerimientos.Requerimientos.get(i).ListaPacientes.get(0);
+                break;
+            }
+        }
+        
+        if(operacion == null){
+            return null;
+        }
+        else{
+        
+            for (int j=0;j<main.pacientes.Pacientes.size();j++){
+
+                if(requerimiento.Cargo.equals("Doctor")){
+                    if(main.pacientes.Pacientes.get(j).Datos_Personales.Nombre.equals(operacion.Nombre)){
+                        if(operacion.Ficha.equals("Procedimientos")){
+                            main.pacientes.Pacientes.get(j).Procedimientos.Asignados.add(operacion.Texto);
+                        }
+                        if(operacion.Ficha.equals("Medicamentos")){
+                            main.pacientes.Pacientes.get(j).Medicamentos.Recetados.add(operacion.Texto);
+                        }
+                        if(operacion.Ficha.equals("Examenes")){
+                            main.pacientes.Pacientes.get(j).Examenes.No_Realizados.add(operacion.Texto);
+                        }
+                    }
+                    main.requerimientos.Requerimientos.get(j).ListaPacientes.remove(0);
+                }
+
+                if(requerimiento.Cargo.equals("Enfermero")){
+                    if(main.pacientes.Pacientes.get(j).Datos_Personales.Nombre.equals(operacion.Nombre)){
+                        if(operacion.Ficha.equals("Procedimientos")){
+                            main.pacientes.Pacientes.get(j).Procedimientos.Completados.add(operacion.Texto);
+                        }
+                        if(operacion.Ficha.equals("Medicamentos")){
+                            main.pacientes.Pacientes.get(j).Medicamentos.Suministrados.add(operacion.Texto);
+                        }
+                    }
+                    main.requerimientos.Requerimientos.get(j).ListaPacientes.remove(0);
+                }
+
+                if(requerimiento.Cargo.equals("Paramedico")){
+                    if(main.pacientes.Pacientes.get(j).Datos_Personales.Nombre.equals(operacion.Nombre)){
+                        if(operacion.Ficha.equals("Examenes")){
+                            main.pacientes.Pacientes.get(j).Examenes.Realizados.add(operacion.Texto);
+                        }
+                    }
+                    main.requerimientos.Requerimientos.get(j).ListaPacientes.remove(0);
+                }
+
+            }
+            
+            return requerimiento.Cargo+";"+operacion.Nombre+";"+operacion.Ficha+";"+operacion.Texto;
+        }
+        
     }
     
     
