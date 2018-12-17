@@ -93,15 +93,15 @@ public class Cliente {
         mensaje2.writeUTF(data);
         mensaje3.writeUTF(data);
         //Cerrar Buffer
-        mensaje1.close();
-        mensaje2.close();
-        mensaje3.close();
+        //mensaje1.close();
+        //mensaje2.close();
+        //mensaje3.close();
     }
     
     public void EnviarIndividual(String data,Socket socket) throws IOException{
         DataOutputStream mensaje = new DataOutputStream(socket.getOutputStream());
         mensaje.writeUTF(data);
-        mensaje.close();
+        //mensaje.close();
     }
     
     
