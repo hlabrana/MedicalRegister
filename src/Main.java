@@ -107,8 +107,12 @@ public class Main implements Runnable {
                 main.ipCoordinador = mensaje.split(";")[0];
             }
         }
+        else{
+            Thread.sleep(5000);
+        }
         
         //PROCESAMIENTO ARCHIVOS
+        
         
         //CREAR ARCHIVO LOG
         try{
