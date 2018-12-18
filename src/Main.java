@@ -154,7 +154,7 @@ public class Main implements Runnable {
                 while(main.permiso == false){ //Cuando llegue el permiso puede ejecutarse
                     Thread.sleep(1000); //Espera por turno un segundo
                 }
-                System.out.print("PERMISO OBTENIDO, COMENZANDO A OPERAR");
+                System.out.println("PERMISO OBTENIDO, COMENZANDO A OPERAR");
                 String operacion = ProcesarRequerimiento(main);
                 EnviarACoordinador(main,main.ipMaquina+";R_LOG;"+operacion,cliente);
                 main.permiso = false;
@@ -285,6 +285,7 @@ public class Main implements Runnable {
         if(mensaje.split(";")[1].equals("R_LOG")){
             Cliente cliente = new Cliente();
             String operacion = ProcesarRequerimiento(main);
+            System.out.println("ENTRO R_LOG:"+main.ipMaquina+main.listaip);
             cliente.EnviarBroadcastN(main.ipMaquina+";LOG;"+operacion,main.ipMaquina,main.listaip);
             EscribirLog(main,operacion);
         }
