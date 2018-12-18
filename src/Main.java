@@ -105,9 +105,7 @@ public class Main implements Runnable {
             }
         }
         else{
-            System.out.println("10 SEG IN");
             Thread.sleep(11000);
-            System.out.println("10 SEG OUT");
         }
         
         //PROCESAMIENTO ARCHIVOS
@@ -127,16 +125,16 @@ public class Main implements Runnable {
             while(true){
                 if(turno == 0){ //Turno Coordinador
                     String operacion = ProcesarRequerimiento(main);
+                    System.out.println("[Requerimiento] Enviando Broadcast con Requerimiento");
                     cliente.EnviarBroadcastN(ipMaquina+";LOG;"+operacion,main.ipMaquina,main.listaip);
+                    System.out.println("[Requerimiento] LOCAL: Escribiendo en LOG");
                     EscribirLog(main,operacion);
-                    System.out.println(turno);
                     turno++;
                 }
                 else{ //Turno maquinas No coordinadoras
+                    System.out.println("[Requerimiento] Enviando Permiso turno: "+turno);
                     EnviarPermiso(ipMaquina+";PERMISO;",main.ipMaquina,turno-1,cliente,main.listaip);
-                    System.out.print("entro");
                     Thread.sleep(6000); //Espera por log de maquina cliente
-                    System.out.print("salio");
                     if(turno == 3){ //RESET DE CONTADOR DE TURNOS
                         turno = 0;
                     }
@@ -151,13 +149,13 @@ public class Main implements Runnable {
         //SI NO ES EL COORDINADOR
         if(main.Is_Coordinador == false){
             while(true){
-                System.out.println("AFUERA "+main.permiso);
                 while(main.permiso == false){ //Cuando llegue el permiso puede ejecutarse
-                    System.out.println("ADENTRO: "+main.permiso);
+                    System.out.println("[Requerimiento] Esperando Aviso Coordinador");
                     Thread.sleep(1000); //Espera por turno un segundo
                 }
-                System.out.println("PERMISO OBTENIDO, COMENZANDO A OPERAR");
+                System.out.println("[Requerimiento] Permiso Obtenido");
                 String operacion = ProcesarRequerimiento(main);
+                System.out.println("[Requerimiento] Enviando Requerimiento al Coordinador");
                 EnviarACoordinador(main,main.ipMaquina+";R_LOG;"+operacion,cliente);
                 main.permiso = false;
             }
@@ -216,7 +214,6 @@ public class Main implements Runnable {
     }
     
     public static void EnviarACoordinador(Main main,String operacion,Cliente cliente) throws IOException{
-        System.out.println("ENVIAR_COORINADOR:"+operacion+"-IP:"+main.ipCoordinador);
         if(main.ipCoordinador.equals(main.listaip.M29.get(0))){
             cliente.EnviarIndividualN(operacion,main.ipCoordinador,Integer.parseInt(main.listaip.M29.get(1)));
         }
@@ -241,7 +238,6 @@ public class Main implements Runnable {
     }
     
     public static void EnviarPermiso(String mensaje,String ipmaquina,int turno,Cliente cliente,IP listaip) throws IOException{
-        System.out.println("ENTRO A ENVIAR PERMISO");
         List<Socket> listasockets = cliente.CrearSocket(ipmaquina, listaip);
         cliente.EnviarIndividual(mensaje,listasockets.get(turno));
     }
@@ -287,7 +283,6 @@ public class Main implements Runnable {
         if(mensaje.split(";")[1].equals("R_LOG")){
             Cliente cliente = new Cliente();
             String operacion = ProcesarRequerimiento(main);
-            System.out.println("ENTRO R_LOG:"+main.ipMaquina+main.listaip);
             cliente.EnviarBroadcastN(main.ipMaquina+";LOG;"+operacion,main.ipMaquina,main.listaip);
             EscribirLog(main,operacion);
         }
