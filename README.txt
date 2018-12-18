@@ -4,10 +4,10 @@
 
 * DATOS UTILES:
 	Maquinas virtuales:
-		ssh root@dist29.inf.santiago.usm.cl   PASSWORD: fedorapass
-		ssh root@dist30.inf.santiago.usm.cl   PASSWORD: fedorapass
-		ssh root@dist31.inf.santiago.usm.cl   PASSWORD: fedorapass
-		ssh root@dist32.inf.santiago.usm.cl   PASSWORD: fedorapass
+		ssh root@dist29.inf.santiago.usm.cl   PASSWORD: fedorapass 	IP: 10.4.60.169
+		ssh root@dist30.inf.santiago.usm.cl   PASSWORD: fedorapass 	IP: 10.4.60.170
+		ssh root@dist31.inf.santiago.usm.cl   PASSWORD: fedorapass 	IP: 10.4.60.171
+		ssh root@dist32.inf.santiago.usm.cl   PASSWORD: fedorapass 	IP: 10.4.60.172
 
 	Comandos:
 		Limpiar procesos JAVA: killall -9 java
@@ -18,11 +18,11 @@
 * INSTRUCCIONES DE EJECUCION:
 
 	1. Verificar que se encuentra instalado la version de JAVA JDK8
-	3. Ingresar a cada maquina virtual por ssh
-	4. Ingresar a la ruta root/MedicalRegister
-	5. Compilar con comando make
-	4. Ejecutar mediante el comando "make run" (SIN COMILLAS)
-	5. Ingresar IP de cada maquina
-	6. Sincronizar la ejecución presionando ENTER en label 'INICIAR:'
-	5. Obsevar registro los en Operaciones.log
-	6. Para eliminar archivos temporales y de compilacion ejecutar "make clean" (SIN COMILLAS)
+	2. Ingresar a cada maquina virtual por ssh
+	3. Ingresar a la ruta root/MedicalRegister
+	4. Compilar con comando make
+	6. Ejecutar mediante el comando "make run" (SIN COMILLAS)
+	7. Ingresar IP de cada maquina
+	8. Sincronizar la ejecución presionando ENTER en label 'INICIAR:'
+	9. Obsevar registro los en Operaciones.log
+	10. Para eliminar archivos temporales y de compilacion ejecutar "make clean" (SIN COMILLAS)
