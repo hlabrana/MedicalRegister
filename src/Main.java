@@ -106,7 +106,7 @@ public class Main implements Runnable {
         }
         else{
             System.out.println("10 SEG IN");
-            Thread.sleep(10000);
+            Thread.sleep(5000);
             System.out.println("10 SEG OUT");
         }
         
@@ -151,6 +151,7 @@ public class Main implements Runnable {
         //SI NO ES EL COORDINADOR
         if(main.Is_Coordinador == false){
             while(true){
+                System.out.println(main.permiso);
                 while(main.permiso == false){ //Cuando llegue el permiso puede ejecutarse
                     Thread.sleep(1000); //Espera por turno un segundo
                 }
@@ -277,7 +278,7 @@ public class Main implements Runnable {
             }
         }
         if(mensaje.split(";")[1].equals("LOG")){
-            //ProcesarLog(main,mensaje);
+            ProcesarLog(main,mensaje);
         }
         if(mensaje.split(";")[1].equals("PERMISO")){
             main.permiso = true;
