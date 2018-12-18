@@ -156,7 +156,7 @@ public class Main implements Runnable {
                 }
                 System.out.print("PERMISO OBTENIDO, COMENZANDO A OPERAR");
                 String operacion = ProcesarRequerimiento(main);
-                EnviarACoordinador(main,operacion,cliente);
+                EnviarACoordinador(main,main.ipMaquina+";R_LOG;"+operacion,cliente);
                 main.permiso = false;
             }
         }
