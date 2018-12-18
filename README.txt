@@ -21,8 +21,8 @@
 	2. Ingresar a cada maquina virtual por ssh
 	3. Ingresar a la ruta root/MedicalRegister
 	4. Compilar con comando make
-	6. Ejecutar mediante el comando "make run" (SIN COMILLAS)
-	7. Ingresar IP de cada maquina
-	8. Sincronizar la ejecución presionando ENTER en label 'INICIAR:'
-	9. Obsevar registro los en Operaciones.log
-	10. Para eliminar archivos temporales y de compilacion ejecutar "make clean" (SIN COMILLAS)
+	5. Ejecutar mediante el comando "make run" (SIN COMILLAS)
+	6. Ingresar IP de cada maquina
+	7. Sincronizar la ejecución presionando ENTER en label 'INICIAR:'
+	8. Obsevar registro los en Operaciones.log
+	9. Para eliminar archivos temporales y de compilacion ejecutar "make clean" (SIN COMILLAS)
