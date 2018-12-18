@@ -35,7 +35,6 @@ public class Main implements Runnable {
     String ipCoordinador;
     boolean permiso;
     FileWriter escribir;
-    List<Socket> listaSocket;
     /**
      * @param args the command line arguments
      * @throws java.io.IOException
@@ -80,15 +79,13 @@ public class Main implements Runnable {
         
         //Crear Socket Cliente
         Cliente cliente = new Cliente();
-        List<Socket> listasockets = cliente.CrearSocket(ipMaquina, listaip);
-        main.listaSocket = listasockets;
 
         //El primer coordinador es la maquina con ip 10.4.60.169
         //las demas maquinas envian su mejor candidato para algortimo de bully
         System.out.println("\nAplicando Algortimo Bully...");
         Doctor candidato = personal.getMejorDoctor();
         main.candidatos.add(ipMaquina+";"+"Bully;"+String.valueOf(candidato.Estudios+candidato.Experiencia));
-        EnviarCandidato(candidato,listasockets,ipMaquina,cliente);
+        EnviarCandidato(candidato,main,ipMaquina,cliente);
         
         //El coordinador espera el inicio de otras MV
         if(ipMaquina.equals("10.6.40.169")){
@@ -96,7 +93,7 @@ public class Main implements Runnable {
             String mensaje = EscogerCoordinador(main);
             System.out.println("[Algoritmo Bully] Nuevo Coordinador con IP: "+mensaje.split(";")[0]);
             System.out.println("[Algoritmo Bully] Avisando resultado..");
-            cliente.EnviarBroadcast(mensaje, listasockets);
+            cliente.EnviarBroadcastN(mensaje,main.ipMaquina,main.listaip);
             if(mensaje.split(";")[0].equals(main.ipMaquina)){
                 main.Is_Coordinador = true;
                 main.ipCoordinador = mensaje.split(";")[0];
@@ -128,12 +125,12 @@ public class Main implements Runnable {
             while(true){
                 if(turno == 0){ //Turno Coordinador
                     String operacion = ProcesarRequerimiento(main);
-                    cliente.EnviarBroadcast(ipMaquina+";LOG;"+operacion,listasockets);
+                    cliente.EnviarBroadcastN(ipMaquina+";LOG;"+operacion,main.ipMaquina,main.listaip);
                     EscribirLog(main,operacion);
                     turno++;
                 }
                 else{ //Turno maquinas No coordinadoras
-                    EnviarPermiso(ipMaquina+";PERMISO; ",listasockets,turno-1,cliente);
+                    EnviarPermiso(ipMaquina+";PERMISO; ",main.ipMaquina,turno-1,cliente,main.listaip);
                     Thread.sleep(6000); //Espera por log de maquina cliente
                     if(turno == 3){ //RESET DE CONTADOR DE TURNOS
                         turno = 0;
@@ -153,7 +150,7 @@ public class Main implements Runnable {
                     Thread.sleep(500); //Espera por turno medio segundo
                 }
                 String operacion = ProcesarRequerimiento(main);
-                EnviarACoordinador(main,operacion,listasockets,cliente);
+                EnviarACoordinador(main,operacion,cliente);
                 main.permiso = false;
             }
         }
@@ -210,7 +207,8 @@ public class Main implements Runnable {
         EscribirLog(main,cargo+";"+nombre+";"+ficha+";"+texto);
     }
     
-    public static void EnviarACoordinador(Main main,String operacion,List<Socket> listasockets,Cliente cliente) throws IOException{
+    public static void EnviarACoordinador(Main main,String operacion,Cliente cliente) throws IOException{
+        List<Socket> listasockets = cliente.CrearSocket(main.ipMaquina,main.listaip);
         for(int i=0;i<listasockets.size();i++){
             if(main.ipCoordinador.equals(listasockets.get(i).getInetAddress().getCanonicalHostName())){
                 cliente.EnviarIndividual(main.ipMaquina+";R_LOG;"+operacion,listasockets.get(i));
@@ -227,7 +225,8 @@ public class Main implements Runnable {
         }
     }
     
-    public static void EnviarPermiso(String mensaje,List<Socket> listasockets,int turno,Cliente cliente) throws IOException{
+    public static void EnviarPermiso(String mensaje,String ipmaquina,int turno,Cliente cliente,IP listaip) throws IOException{
+        List<Socket> listasockets = cliente.CrearSocket(ipmaquina, listaip);
         cliente.EnviarIndividual(mensaje,listasockets.get(turno));
     }
     
@@ -238,15 +237,11 @@ public class Main implements Runnable {
         return ip;
     }
     
-    public static void EnviarCandidato(Doctor candidato,List<Socket> listasockets,String ipmaquina,Cliente cliente) throws IOException{
+    public static void EnviarCandidato(Doctor candidato,Main main,String ipmaquina,Cliente cliente) throws IOException{
         if(ipmaquina.equals("10.6.40.169") == false){
             String experiencia = String.valueOf(candidato.getEstudios()+candidato.getExperiencia());
             System.out.println("[Algortimo Bully] Enviando Candidato a Coordinador...");
-            for(int i=0;i<listasockets.size();i++){
-                if (listasockets.get(i).getInetAddress().getCanonicalHostName().equals("10.6.40.169")){
-                    cliente.EnviarIndividual(ipmaquina+";"+"Bully;"+experiencia,listasockets.get(i));
-                }
-            }
+            cliente.EnviarIndividualN(ipmaquina+";"+"Bully;"+experiencia,"10.6.40.169",2900);
         }
     }
     
@@ -276,7 +271,7 @@ public class Main implements Runnable {
         if(mensaje.split(";")[1].equals("R_LOG")){
             Cliente cliente = new Cliente();
             String operacion = ProcesarRequerimiento(main);
-            cliente.EnviarBroadcast(main.ipMaquina+";LOG;"+operacion,main.listaSocket);
+            cliente.EnviarBroadcastN(main.ipMaquina+";LOG;"+operacion,main.ipMaquina,main.listaip);
             EscribirLog(main,operacion);
         }
     }

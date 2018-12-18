@@ -84,20 +84,10 @@ public class Cliente {
     }
     
     public void EnviarBroadcast(String data,List<Socket> listaSocket) throws IOException{
-        String ip1 = listaSocket.get(0).getInetAddress().getCanonicalHostName();
-        int port1 = listaSocket.get(0).getPort();
-        String ip2 = listaSocket.get(1).getInetAddress().getCanonicalHostName();
-        int port2 = listaSocket.get(1).getPort();
-        String ip3 = listaSocket.get(2).getInetAddress().getCanonicalHostName();
-        int port3 = listaSocket.get(2).getPort();
-        
-        Socket uno = new Socket(ip1,port1);
-        Socket dos = new Socket(ip2,port2);
-        Socket tres = new Socket(ip3,port3);
         //SERIALIZAR DATA EN SOCKET
-        DataOutputStream mensaje1 = new DataOutputStream(uno.getOutputStream());
-        DataOutputStream mensaje2 = new DataOutputStream(dos.getOutputStream());
-        DataOutputStream mensaje3 = new DataOutputStream(tres.getOutputStream());
+        DataOutputStream mensaje1 = new DataOutputStream(listaSocket.get(0).getOutputStream());
+        DataOutputStream mensaje2 = new DataOutputStream(listaSocket.get(1).getOutputStream());
+        DataOutputStream mensaje3 = new DataOutputStream(listaSocket.get(2).getOutputStream());
         //ENVIAR DATA
         mensaje1.writeUTF(data);
         mensaje2.writeUTF(data);
@@ -108,13 +98,108 @@ public class Cliente {
         mensaje3.close();
     }
     
+    public void EnviarBroadcastN(String data,String ipmaquina,IP listaip) throws IOException{
+        if (ipmaquina.equals(listaip.M29.get(0))){
+            try {
+                Socket SC30 = new Socket(listaip.M30.get(0),Integer.parseInt(listaip.M30.get(1)));
+                Socket SC31 = new Socket(listaip.M31.get(0),Integer.parseInt(listaip.M31.get(1)));
+                Socket SC32 = new Socket(listaip.M32.get(0),Integer.parseInt(listaip.M32.get(1)));
+                //SERIALIZAR DATA EN SOCKET
+                DataOutputStream mensaje1 = new DataOutputStream(SC30.getOutputStream());
+                DataOutputStream mensaje2 = new DataOutputStream(SC31.getOutputStream());
+                DataOutputStream mensaje3 = new DataOutputStream(SC32.getOutputStream());
+                //ENVIAR DATA
+                mensaje1.writeUTF(data);
+                mensaje2.writeUTF(data);
+                mensaje3.writeUTF(data);
+                //Cerrar Buffer
+                mensaje1.close();
+                mensaje2.close();
+                mensaje3.close();
+                
+            } catch (IOException ex) {
+                Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        if (ipmaquina.equals(listaip.M30.get(0))){
+            try {
+                Socket SC29 = new Socket(listaip.M29.get(0),Integer.parseInt(listaip.M29.get(1)));
+                Socket SC31 = new Socket(listaip.M31.get(0),Integer.parseInt(listaip.M31.get(1)));
+                Socket SC32 = new Socket(listaip.M32.get(0),Integer.parseInt(listaip.M32.get(1)));
+                //SERIALIZAR DATA EN SOCKET
+                DataOutputStream mensaje1 = new DataOutputStream(SC29.getOutputStream());
+                DataOutputStream mensaje2 = new DataOutputStream(SC31.getOutputStream());
+                DataOutputStream mensaje3 = new DataOutputStream(SC32.getOutputStream());
+                //ENVIAR DATA
+                mensaje1.writeUTF(data);
+                mensaje2.writeUTF(data);
+                mensaje3.writeUTF(data);
+                //Cerrar Buffer
+                mensaje1.close();
+                mensaje2.close();
+                mensaje3.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        if (ipmaquina.equals(listaip.M31.get(0))){
+            try {
+                Socket SC30 = new Socket(listaip.M30.get(0),Integer.parseInt(listaip.M30.get(1)));
+                Socket SC29 = new Socket(listaip.M29.get(0),Integer.parseInt(listaip.M29.get(1)));
+                Socket SC32 = new Socket(listaip.M32.get(0),Integer.parseInt(listaip.M32.get(1)));
+                //SERIALIZAR DATA EN SOCKET
+                DataOutputStream mensaje1 = new DataOutputStream(SC30.getOutputStream());
+                DataOutputStream mensaje2 = new DataOutputStream(SC29.getOutputStream());
+                DataOutputStream mensaje3 = new DataOutputStream(SC32.getOutputStream());
+                //ENVIAR DATA
+                mensaje1.writeUTF(data);
+                mensaje2.writeUTF(data);
+                mensaje3.writeUTF(data);
+                //Cerrar Buffer
+                mensaje1.close();
+                mensaje2.close();
+                mensaje3.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        if (ipmaquina.equals(listaip.M32.get(0))){
+            try {
+                Socket SC30 = new Socket(listaip.M30.get(0),Integer.parseInt(listaip.M30.get(1)));
+                Socket SC31 = new Socket(listaip.M31.get(0),Integer.parseInt(listaip.M31.get(1)));
+                Socket SC29 = new Socket(listaip.M29.get(0),Integer.parseInt(listaip.M29.get(1)));
+                //SERIALIZAR DATA EN SOCKET
+                DataOutputStream mensaje1 = new DataOutputStream(SC30.getOutputStream());
+                DataOutputStream mensaje2 = new DataOutputStream(SC31.getOutputStream());
+                DataOutputStream mensaje3 = new DataOutputStream(SC29.getOutputStream());
+                //ENVIAR DATA
+                mensaje1.writeUTF(data);
+                mensaje2.writeUTF(data);
+                mensaje3.writeUTF(data);
+                //Cerrar Buffer
+                mensaje1.close();
+                mensaje2.close();
+                mensaje3.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
     public void EnviarIndividual(String data,Socket socket) throws IOException{
-        String ip1 = socket.getInetAddress().getCanonicalHostName();
-        int port1 = socket.getPort();
-        Socket uno = new Socket(ip1,port1);
-        DataOutputStream mensaje = new DataOutputStream(uno.getOutputStream());
+        DataOutputStream mensaje = new DataOutputStream(socket.getOutputStream());
         mensaje.writeUTF(data);
         mensaje.close();
+    }
+    
+    public void EnviarIndividualN(String data,String ipDestino,int puerto) throws IOException{
+        Socket SC30 = new Socket(ipDestino,puerto);
+        try (DataOutputStream mensaje = new DataOutputStream(SC30.getOutputStream())) {
+            mensaje.writeUTF(data);
+        }
     }
     
     
