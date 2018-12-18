@@ -373,8 +373,8 @@ public class Main implements Runnable {
                 Socket socket = servidor.accept();
                 DataInputStream mensaje = new DataInputStream(socket.getInputStream());
                 String data = mensaje.readUTF();
-                ProcesarMensaje(this,data,this.candidatos);
                 System.out.println("\nSERVIDOR: "+data+"\n");
+                ProcesarMensaje(this,data,this.candidatos);
                 socket.close();
             }
         } catch (IOException ex) {
