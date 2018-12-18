@@ -277,7 +277,7 @@ public class Main implements Runnable {
             }
         }
         if(mensaje.split(";")[1].equals("LOG")){
-            ProcesarLog(main,mensaje);
+            //ProcesarLog(main,mensaje);
         }
         if(mensaje.split(";")[1].equals("PERMISO")){
             main.permiso = true;
