@@ -105,7 +105,7 @@ public class Main implements Runnable {
             }
         }
         else{
-            Thread.sleep(11000);
+            Thread.sleep(15000);
         }
         
         //PROCESAMIENTO ARCHIVOS
@@ -134,7 +134,7 @@ public class Main implements Runnable {
                 else{ //Turno maquinas No coordinadoras
                     System.out.println("[Requerimiento] Enviando Permiso turno: "+turno);
                     EnviarPermiso(ipMaquina+";PERMISO;",main.ipMaquina,turno-1,cliente,main.listaip);
-                    Thread.sleep(6000); //Espera por log de maquina cliente
+                    Thread.sleep(10000); //Espera por log de maquina cliente
                     if(turno == 3){ //RESET DE CONTADOR DE TURNOS
                         turno = 0;
                     }
@@ -282,9 +282,8 @@ public class Main implements Runnable {
         }
         if(mensaje.split(";")[1].equals("R_LOG")){
             Cliente cliente = new Cliente();
-            String operacion = ProcesarRequerimiento(main);
-            cliente.EnviarBroadcastN(main.ipMaquina+";LOG;"+operacion,main.ipMaquina,main.listaip);
-            EscribirLog(main,operacion);
+            ProcesarLog(main,mensaje);
+            cliente.EnviarBroadcastN(mensaje,main.ipMaquina,main.listaip);
         }
     }
     
