@@ -113,7 +113,7 @@ public class Main implements Runnable {
         
         //CREAR ARCHIVO LOG
         try{
-        FileWriter archivolog = new FileWriter("Operaciones.log",true);
+        FileWriter archivolog = new FileWriter("Operaciones.log",false);
         archivolog.write("Operaciones Relativas a Maquina IP: "+main.ipMaquina+"\n\n");
         archivolog.close();
         }
