@@ -214,11 +214,17 @@ public class Main implements Runnable {
     }
     
     public static void EnviarACoordinador(Main main,String operacion,Cliente cliente) throws IOException{
-        List<Socket> listasockets = cliente.CrearSocket(main.ipMaquina,main.listaip);
-        for(int i=0;i<listasockets.size();i++){
-            if(main.ipCoordinador.equals(listasockets.get(i).getInetAddress().getCanonicalHostName())){
-                cliente.EnviarIndividual(main.ipMaquina+";R_LOG;"+operacion,listasockets.get(i));
-            }
+        if(main.ipCoordinador.equals(main.listaip.M29.get(0))){
+            cliente.EnviarIndividualN(operacion,main.ipCoordinador,Integer.parseInt(main.listaip.M29.get(1)));
+        }
+        if(main.ipCoordinador.equals(main.listaip.M30.get(0))){
+            cliente.EnviarIndividualN(operacion,main.ipCoordinador,Integer.parseInt(main.listaip.M30.get(1)));
+        }
+        if(main.ipCoordinador.equals(main.listaip.M31.get(0))){
+            cliente.EnviarIndividualN(operacion,main.ipCoordinador,Integer.parseInt(main.listaip.M31.get(1)));
+        }
+        if(main.ipCoordinador.equals(main.listaip.M32.get(0))){
+            cliente.EnviarIndividualN(operacion,main.ipCoordinador,Integer.parseInt(main.listaip.M32.get(1)));
         }
     }
     
@@ -369,7 +375,7 @@ public class Main implements Runnable {
                 DataInputStream mensaje = new DataInputStream(socket.getInputStream());
                 String data = mensaje.readUTF();
                 ProcesarMensaje(this,data,this.candidatos);
-                //System.out.println("\n"+data+"\n");
+                System.out.println("\nSERVIDOR: "+data+"\n");
                 socket.close();
             }
         } catch (IOException ex) {

@@ -199,6 +199,7 @@ public class Cliente {
         Socket SC30 = new Socket(ipDestino,puerto);
         try (DataOutputStream mensaje = new DataOutputStream(SC30.getOutputStream())) {
             mensaje.writeUTF(data);
+            mensaje.close();
         }
     }
     
