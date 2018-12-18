@@ -283,7 +283,8 @@ public class Main implements Runnable {
         if(mensaje.split(";")[1].equals("R_LOG")){
             Cliente cliente = new Cliente();
             ProcesarLog(main,mensaje);
-            cliente.EnviarBroadcastN(mensaje,main.ipMaquina,main.listaip);
+            String operacion = mensaje.split(";")[2]+mensaje.split(";")[3]+mensaje.split(";")[4]+mensaje.split(";")[5];
+            cliente.EnviarBroadcastN(main.ipMaquina+";LOG;"+operacion,main.ipMaquina,main.listaip);
         }
     }
     
