@@ -214,6 +214,7 @@ public class Main implements Runnable {
     }
     
     public static void EnviarACoordinador(Main main,String operacion,Cliente cliente) throws IOException{
+        System.out.println("ENVIAR_COORINADOR:"+operacion+"-IP:"+main.ipCoordinador);
         if(main.ipCoordinador.equals(main.listaip.M29.get(0))){
             cliente.EnviarIndividualN(operacion,main.ipCoordinador,Integer.parseInt(main.listaip.M29.get(1)));
         }
