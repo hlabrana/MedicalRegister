@@ -105,7 +105,9 @@ public class Main implements Runnable {
             }
         }
         else{
+            System.out.println("10 SEG IN");
             Thread.sleep(10000);
+            System.out.println("10 SEG OUT");
         }
         
         //PROCESAMIENTO ARCHIVOS
@@ -131,7 +133,7 @@ public class Main implements Runnable {
                     turno++;
                 }
                 else{ //Turno maquinas No coordinadoras
-                    EnviarPermiso(ipMaquina+";PERMISO; ",main.ipMaquina,turno-1,cliente,main.listaip);
+                    EnviarPermiso(ipMaquina+";PERMISO;",main.ipMaquina,turno-1,cliente,main.listaip);
                     System.out.print("entro");
                     Thread.sleep(6000); //Espera por log de maquina cliente
                     System.out.print("salio");
@@ -152,6 +154,7 @@ public class Main implements Runnable {
                 while(main.permiso == false){ //Cuando llegue el permiso puede ejecutarse
                     Thread.sleep(1000); //Espera por turno un segundo
                 }
+                System.out.print("PERMISO OBTENIDO, COMENZANDO A OPERAR");
                 String operacion = ProcesarRequerimiento(main);
                 EnviarACoordinador(main,operacion,cliente);
                 main.permiso = false;
@@ -229,6 +232,7 @@ public class Main implements Runnable {
     }
     
     public static void EnviarPermiso(String mensaje,String ipmaquina,int turno,Cliente cliente,IP listaip) throws IOException{
+        System.out.println("ENTRO A ENVIAR PERMISO");
         List<Socket> listasockets = cliente.CrearSocket(ipmaquina, listaip);
         cliente.EnviarIndividual(mensaje,listasockets.get(turno));
     }
