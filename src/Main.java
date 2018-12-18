@@ -89,7 +89,7 @@ public class Main implements Runnable {
         
         //El coordinador espera el inicio de otras MV
         if(ipMaquina.equals("10.6.40.169")){
-            Thread.sleep(5000);
+            Thread.sleep(10000);
             String mensaje = EscogerCoordinador(main);
             System.out.println("[Algoritmo Bully] Nuevo Coordinador con IP: "+mensaje.split(";")[0]);
             System.out.println("[Algoritmo Bully] Avisando resultado..");
@@ -105,7 +105,7 @@ public class Main implements Runnable {
             }
         }
         else{
-            Thread.sleep(5000);
+            Thread.sleep(10000);
         }
         
         //PROCESAMIENTO ARCHIVOS
@@ -127,11 +127,14 @@ public class Main implements Runnable {
                     String operacion = ProcesarRequerimiento(main);
                     cliente.EnviarBroadcastN(ipMaquina+";LOG;"+operacion,main.ipMaquina,main.listaip);
                     EscribirLog(main,operacion);
+                    System.out.println(turno);
                     turno++;
                 }
                 else{ //Turno maquinas No coordinadoras
                     EnviarPermiso(ipMaquina+";PERMISO; ",main.ipMaquina,turno-1,cliente,main.listaip);
+                    System.out.print("entro");
                     Thread.sleep(6000); //Espera por log de maquina cliente
+                    System.out.print("salio");
                     if(turno == 3){ //RESET DE CONTADOR DE TURNOS
                         turno = 0;
                     }
@@ -147,7 +150,7 @@ public class Main implements Runnable {
         if(main.Is_Coordinador == false){
             while(true){
                 while(main.permiso == false){ //Cuando llegue el permiso puede ejecutarse
-                    Thread.sleep(500); //Espera por turno medio segundo
+                    Thread.sleep(1000); //Espera por turno un segundo
                 }
                 String operacion = ProcesarRequerimiento(main);
                 EnviarACoordinador(main,operacion,cliente);
@@ -362,7 +365,7 @@ public class Main implements Runnable {
                 DataInputStream mensaje = new DataInputStream(socket.getInputStream());
                 String data = mensaje.readUTF();
                 ProcesarMensaje(this,data,this.candidatos);
-                System.out.println("\n"+data+"\n");
+                //System.out.println("\n"+data+"\n");
                 socket.close();
             }
         } catch (IOException ex) {

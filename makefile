@@ -19,4 +19,3 @@ run:
 
 clean:
 	rm -rf src/*.class
-	rm Operaciones.log
