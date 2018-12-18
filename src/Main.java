@@ -151,7 +151,7 @@ public class Main implements Runnable {
             while(true){
                 while(main.permiso == false){ //Cuando llegue el permiso puede ejecutarse
                     System.out.println("[Requerimiento] Esperando Aviso Coordinador");
-                    Thread.sleep(1000); //Espera por turno un segundo
+                    Thread.sleep(500); //Espera por turno un segundo
                 }
                 System.out.println("[Requerimiento] Permiso Obtenido");
                 String operacion = ProcesarRequerimiento(main);
@@ -238,8 +238,50 @@ public class Main implements Runnable {
     }
     
     public static void EnviarPermiso(String mensaje,String ipmaquina,int turno,Cliente cliente,IP listaip) throws IOException{
-        List<Socket> listasockets = cliente.CrearSocket(ipmaquina, listaip);
-        cliente.EnviarIndividual(mensaje,listasockets.get(turno));
+        if(ipmaquina.equals("10.6.40.169")){
+            if(turno == 0){
+                cliente.EnviarIndividualN(mensaje,"10.6.40.170",3000);
+            }
+            if(turno == 1){
+                cliente.EnviarIndividualN(mensaje,"10.6.40.171",3100);
+            }
+            if(turno == 2){
+                cliente.EnviarIndividualN(mensaje,"10.6.40.172",3200);
+            }
+        }
+        if(ipmaquina.equals("10.6.40.170")){
+            if(turno == 0){
+                cliente.EnviarIndividualN(mensaje,"10.6.40.169",3000);
+            }
+            if(turno == 1){
+                cliente.EnviarIndividualN(mensaje,"10.6.40.171",3100);
+            }
+            if(turno == 2){
+                cliente.EnviarIndividualN(mensaje,"10.6.40.172",3200);
+            }
+        }
+        if(ipmaquina.equals("10.6.40.171")){
+            if(turno == 0){
+                cliente.EnviarIndividualN(mensaje,"10.6.40.170",3000);
+            }
+            if(turno == 1){
+                cliente.EnviarIndividualN(mensaje,"10.6.40.169",3100);
+            }
+            if(turno == 2){
+                cliente.EnviarIndividualN(mensaje,"10.6.40.172",3200);
+            }
+        }
+        if(ipmaquina.equals("10.6.40.172")){
+            if(turno == 0){
+                cliente.EnviarIndividualN(mensaje,"10.6.40.170",3000);
+            }
+            if(turno == 1){
+                cliente.EnviarIndividualN(mensaje,"10.6.40.171",3100);
+            }
+            if(turno == 2){
+                cliente.EnviarIndividualN(mensaje,"10.6.40.169",3200);
+            }
+        }
     }
     
     public static String ConsultarIPMaquina(){

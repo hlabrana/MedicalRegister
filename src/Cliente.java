@@ -197,10 +197,9 @@ public class Cliente {
     
     public void EnviarIndividualN(String data,String ipDestino,int puerto) throws IOException{
         Socket SC30 = new Socket(ipDestino,puerto);
-        try (DataOutputStream mensaje = new DataOutputStream(SC30.getOutputStream())) {
-            mensaje.writeUTF(data);
-            mensaje.close();
-        }
+        DataOutputStream mensaje = new DataOutputStream(SC30.getOutputStream());
+        mensaje.writeUTF(data);
+        mensaje.close();
     }
     
     
